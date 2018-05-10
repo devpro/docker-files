@@ -1,5 +1,7 @@
 # Docker file for Elastic Stack
 
+[Home](../readme.md) > [Elastic Stack](./elastic-stack.md)
+
 ## References
 
 - [github.com/elastic/stack-docker](https://github.com/elastic/stack-docker)
