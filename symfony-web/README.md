@@ -1,8 +1,26 @@
-# Symfony
+# Symfony website on Docker
 
-## Run the example
+## Usage
 
-composer require server --dev
+- Create & start the containers
+
+```bash
+sudo docker-compose up -d --build
+```
+
+- Open the website on [localhost:8000](http://localhost:8000/)
+
+- Follow the logs
+
+```bash
+sudo docker-compose logs -f
+```
+
+- Shut down the containers
+
+```bash
+sudo docker-compose up -d --build
+```
 
 ## Steps to reproduce
 
@@ -33,4 +51,4 @@ See. [digitalocean tutorial](https://www.digitalocean.com/community/tutorials/ho
 composer create-project symfony/website-skeleton sf4-website
 ```
 
-- You can try locally the site with `composer require server --dev` and run the unit tests with `php bin/phpunit`.
+- (this is not the goal here but ) you can try locally the site with `composer require server --dev` and run the unit tests with `php bin/phpunit`.
