@@ -2,6 +2,14 @@
 
 ## Usage
 
+- Retrieve packages and run build tools
+
+```bash
+composer install
+yarn install
+yarm encore dev
+```
+
 - Create & start the containers
 
 ```bash
@@ -52,3 +60,20 @@ composer create-project symfony/website-skeleton sf4-website
 ```
 
 - (this is not the goal here but ) you can try locally the site with `composer require server --dev` and run the unit tests with `php bin/phpunit`.
+
+- Install encore with Flex
+
+```bash
+composer require encore
+yarn install
+```
+
+- Install bootstrap
+
+```bash
+yarn add bootstrap --dev
+yarn add jquery popper.js --dev
+yarn add sass-loader@^7.0.1 node-sass --dev
+```
+
+- Uncomment `.enableSassLoader()` in `webpack.config.js`
