@@ -1,7 +1,6 @@
 ﻿# ASP.NET Core Web application sample
 
-## How to build & run with Docker
-
+## How to build with Docker
 
 ```bash
 # build a new image (from solution root folder)
@@ -9,7 +8,11 @@ docker build . -t devpro-samples/aspnetcore-web -f src/AspNetCoreWebApp/Dockerfi
 
 # check image in local repository
 docker images
+```
 
+## How to run with Docker
+
+```bash
 # run a container on the new image
 docker run -it --rm -p 8080:80 --name aspnetcorewebsample devpro-samples/aspnetcore-web
 
@@ -27,7 +30,28 @@ docker run --rm -it -p 8000:80 -p 8001:443 -e ASPNETCORE_URLS="https://+;http://
 
 # if there is an issue (direct crash), replace the ENTRYPOINT line by CMD "/bin/bash" in Dockerfile, build the image and run a new container
 docker run -i -t -p 8080:80 devpro-samples/aspnetcore-web
+```
 
-# clean up
+## How to run on Kubernetes
+
+```bash
+# first push the image on a repository accessible from the nodes
+docker build . -t devprofr/aspnetcoresample:latest -f src/AspNetCoreWebApp/Dockerfile --no-cache
+docker push devprofr/aspnetcoresample:latest
+
+# then create a Kubernetes deployment
+kubectl create deployment aspnetcore-sample --image=devprofr/aspnetcoresample:latest
+
+# make sure the pod is running ok
+kubectl get deploy,pod
+
+kubectl patch deployment aspnetcore-sample --patch '{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"ports\": [{\"containerPort\": 80}]}]}}}}'
+
+```
+
+## How to clean-up
+
+```bash
+# remove unused data (see https://docs.docker.com/engine/reference/commandline/system_prune/)
 docker system prune -f
 ```
