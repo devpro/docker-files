@@ -34,19 +34,45 @@ docker run -i -t -p 8080:80 devpro-samples/aspnetcore-web
 
 ## How to run on Kubernetes
 
+__Tip__: On Windows, you can use Git Bash to get some interesting Linux programs (kubectl and minikube exe file to manually copy in C:\Program Files\Git\mingw64\bin).
+
 ```bash
 # first push the image on a repository accessible from the nodes
 docker build . -t devprofr/aspnetcoresample:latest -f src/AspNetCoreWebApp/Dockerfile --no-cache
 docker push devprofr/aspnetcoresample:latest
 
-# then create a Kubernetes deployment
+# then create a Kubernetes deployment (see https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 kubectl create deployment aspnetcore-sample --image=devprofr/aspnetcoresample:latest
 
 # make sure the pod is running ok
 kubectl get deploy,pod
+kubectl get deployment aspnetcore-sample -o yaml
 
-kubectl patch deployment aspnetcore-sample --patch '{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"ports\": [{\"containerPort\": 80}]}]}}}}'
+# update the container port (see https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/)
+cat > deployment.yaml <<EOL
+spec:
+  template:
+    spec:
+      containers:
+        - name: aspnetcoresample
+          ports:
+            - containerPort: 80
+EOL
+kubectl patch deployment aspnetcore-sample --patch "$(cat deployment.yaml)"
 
+# access the webapp through a NodePort service, open http://<ip>:<node_port> (or how to get the url on Minikube)
+kubectl expose deployment aspnetcore-sample --type=NodePort --name=aspnetcoresample
+kubectl describe service aspnetcoresample
+minikube service aspnetcoresample --url
+kubectl delete service aspnetcoresample
+
+# access the webapp through a NodePort service (and how to get the url on Minikube)
+kubectl expose deployment aspnetcore-sample --type=LoadBalancer --port 80 --target-port 80 --name aspnetcoresample
+minikube service aspnetcoresample
+kubectl delete service aspnetcoresample
+
+# execute bash commands in the pod
+kubectl exec --stdin --tty <pod-name> -- bash
 ```
 
 ## How to clean-up
